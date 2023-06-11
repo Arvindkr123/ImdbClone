@@ -4,7 +4,7 @@ import Card from './Card'
 const Movies = () => {
     return (
         <div className='mb-8'>
-            <div className='mt-8 text-2xl text-bold text-center'>Trending Movies</div>
+            <div className='mt-8 text-xl md:text-2xl text-bold text-center'>Trending Movies</div>
             <div className='flex flex-wrap justify-center'>
                 <Card />
                 <Card />

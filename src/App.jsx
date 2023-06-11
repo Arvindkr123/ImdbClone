@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from './components/Navbar'
 import Banner from './components/Banner.jsx'
+import Pagination from './components/Pagination.jsx'
 import Movies from './components/Movies'
 
 const App = () => {
@@ -8,7 +9,8 @@ const App = () => {
         <div>
             <Navbar />
             <Banner/>
-            <Movies/>
+            <Movies />
+            <Pagination/>
         </div>
     )
 }
