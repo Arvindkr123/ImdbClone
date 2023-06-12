@@ -1,0 +1,9 @@
+.banner {
+    background-position: center;
+    background-size: cover;
+    height: 40vh;
+    > md: {
+      "height": 77vh;
+    }
+}
+  
