@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Card from './Card'
 import axios from 'axios';
 import { Audio, Oval } from 'react-loader-spinner'
 import Pagination from './Pagination';
@@ -7,6 +6,8 @@ import Pagination from './Pagination';
 const Movies = () => {
     const [movies, setMovies] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
+    const [hover, setHover] = useState('')
+    const [fav, setFav] = useState([]);
     const goahead = () => {
         setPageNumber(pageNumber + 1)
     }
@@ -24,6 +25,18 @@ const Movies = () => {
     useEffect(() => {
         getMoviesData();
     }, [pageNumber])
+    const truncateString = (str, maxLength) => {
+        if (str.length > maxLength) {
+            return str.substring(0, maxLength) + '...';
+        } else {
+            return str;
+        }
+    };
+    const addToFavourite = (movie) => {
+        let newArray = [...fav, movie]
+        setFav([...newArray]);
+        console.log(newArray)
+    }
     return (
         <>
             <div className='mb-8'>
@@ -44,7 +57,24 @@ const Movies = () => {
                         : <div className='flex flex-wrap justify-center gap-10'>
                             {
                                 movies?.map((movie) => {
-                                    return <Card movie={movie} key={movie.id} />
+                                    return <div key={movie.id} className='p-1 hover:scale-110 duration-300 mt-8 relative' onMouseEnter={() => { setHover(movie.id) }} onMouseLeave={() => setHover('')}>
+                                        <img src={`https:/image.tmdb.org/t/p/w500/${movie.backdrop_path}`} className='bg-cover bg-center rounded-t-lg' />
+                                        {
+                                            hover === movie.id &&
+                                            <>
+                                                {
+                                                    !fav.find((m) => m.id === movie.id) ? <>
+                                                        <div className='absolute top-2 right-2 bg-gray-900 rounded-xl text-2xl cursor-pointer p-2' onClick={() => addToFavourite(movie)}>🥰</div>
+                                                    </> : <>
+                                                        <div className='absolute top-2 right-2 bg-gray-900 rounded-xl text-2xl cursor-pointer p-2' onClick={() => addToFavourite(movie)}>❌</div>
+                                                    </>
+                                                }
+                                            </>
+                                        }
+                                        <div className='w-full'>
+                                            <div className='text-center bg-gray-900 text-white py-2 text-sm md:text-xl rounded-b-lg '>{truncateString(movie.title, 20)}</div>
+                                        </div>
+                                    </div>
                                 })
                             }
                         </div>
