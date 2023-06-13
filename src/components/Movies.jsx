@@ -16,15 +16,25 @@ const Movies = () => {
             setPageNumber(pageNumber - 1)
         }
     }
+
+    useEffect(() => {
+        getMoviesData();
+    }, [pageNumber])
+
+
     const url = `https://api.themoviedb.org/3/trending/movie/week?api_key=9c3e3681cf1cc02a6205b0db0f1466cd&page=${pageNumber}`;
     const getMoviesData = async () => {
         let res = await axios.get(url)
         console.log(res.data.results);
         setMovies(res.data.results)
+        let oldFav = localStorage.getItem('imdb');
+        if (oldFav) {
+            oldFav = JSON.parse(oldFav);
+        }
+        console.log('old fav ', oldFav)
+        setFav([...oldFav]);
     }
-    useEffect(() => {
-        getMoviesData();
-    }, [pageNumber])
+
     const truncateString = (str, maxLength) => {
         if (str.length > maxLength) {
             return str.substring(0, maxLength) + '...';
@@ -35,7 +45,14 @@ const Movies = () => {
     const addToFavourite = (movie) => {
         let newArray = [...fav, movie]
         setFav([...newArray]);
+        localStorage.setItem('imdb', JSON.stringify(newArray));
         console.log(newArray)
+    }
+
+    const delfavMovie = (movie) => {
+        let newArray = fav.filter((m) => m.id !== movie.id);
+        setFav([...newArray])
+        localStorage.setItem('imdb', JSON.stringify(newArray));
     }
     return (
         <>
@@ -66,7 +83,7 @@ const Movies = () => {
                                                     !fav.find((m) => m.id === movie.id) ? <>
                                                         <div className='absolute top-2 right-2 bg-gray-900 rounded-xl text-2xl cursor-pointer p-2' onClick={() => addToFavourite(movie)}>🥰</div>
                                                     </> : <>
-                                                        <div className='absolute top-2 right-2 bg-gray-900 rounded-xl text-2xl cursor-pointer p-2' onClick={() => addToFavourite(movie)}>❌</div>
+                                                        <div className='absolute top-2 right-2 bg-gray-900 rounded-xl text-2xl cursor-pointer p-2' onClick={() => delfavMovie(movie)}>❌</div>
                                                     </>
                                                 }
                                             </>
